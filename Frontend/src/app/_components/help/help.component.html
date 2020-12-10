@@ -1,0 +1,100 @@
+<div class="banner">
+  <div class="title">How can we help you?</div>
+	<div class="small-title">Our client care team is here to support you every step of the way.</div>
+	<div class="input-container">
+	  <div style="display: inline-block; position: relative;">
+			<input type="text" placeholder="Search..." />
+			<span class="search-icon"></span>
+		</div>
+	</div>
+</div>
+
+<ul class="help-groups">
+	<li *ngFor="let group of groups" (click)="groupExpand(group)">
+	  <span style="display: block;">
+		<i class="fa {{group.icon}} icon"></i>
+		<h3>{{group.title}}</h3>
+		<p>{{group.blurb}}</p>
+		<a class="learn-more">Learn More</a>
+		</span>
+		<div style="cursor: default">
+		  <i class="fa fa-caret-up" [ngStyle]="{display: selectedGroup && selectedGroup.id == group.id ? 'block' : 'none'}"></i>
+		</div>
+	</li>
+</ul>
+
+<ul *ngIf="selectedGroup" class="help-group">
+  <li class="item" *ngIf="items.length == 0">
+	  <div class="question">There are currently no help questions in this section.</div>
+	</li>
+  <li class="item" *ngFor="let item of items" [draggable]="myInfo.permissionLevel >= 6000" (dragover)="onDragOver($event, false, item)" (dragstart)="onDragStart($event, false, item)" (dragend)="onDragEnd(false, item)">
+	  <ng-container *ngIf="!item.edit || myInfo.permissionLevel < 6000">
+			<div class="question" (click)="toggleItem(item)">{{item.question}}
+				<div *ngIf="myInfo.permissionLevel >= 6000" style="display: inline-block">
+				  <a *ngIf="!item.caq" title="Add to Commonly Asked Questions" (click)="addCaq($event, item)" style="margin-right:5px;">
+						<span class="silk silk-inline silk-award-star-add"></span>
+					</a>
+					<a *ngIf="item.caq" title="Remove from Commonly Asked Questions" (click)="removeCaq($event, item)" style="margin-right:5px;">
+						<span class="silk silk-inline silk-award-star-delete"></span>
+					</a>
+					<a title="Edit" (click)="editQuestion($event, item)" style="margin-right:5px;">
+						<span class="silk silk-inline silk-pencil"></span>
+					</a>
+					<a title="Remove Question" (click)="removeQuestion($event, item)">
+						<span class="silk silk-inline silk-delete"></span>
+					</a>
+				</div>
+				<i class="fa" [ngClass]="{'fa-caret-down': !item.expanded, 'fa-caret-up': item.expanded}"></i>
+			</div>
+			<div class="answer" [ngClass]="{expanded: item.expanded}" [innerHTML]="item.answer"></div>
+		</ng-container>
+		<ng-container *ngIf="item.edit && myInfo.permissionLevel >= 6000">
+		  <input type="text" name="qedit{{item.id}}" [(ngModel)]="item.tempQuestion" class="question-edit">
+			<textarea name="aedit{{item.id}}" [(ngModel)]="item.tempAnswer" class="answer-edit" ></textarea>
+			<div style="margin-top: 10px;">
+				<button [disabled]="loading" class="btn btn-primary" (click)="save($event, item)">Save</button>
+				<img *ngIf="loading" class="pl-3" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+				&nbsp;&nbsp;
+				<a (click)="cancelSave($event, item)" class="btn-btn-link">Cancel</a>
+			</div>
+		</ng-container>
+	</li>
+	<ng-container *ngIf="myInfo.permissionLevel >= 6000">
+	  <li class="item">
+		  <input type="text" name="qadd" [(ngModel)]="newQuestion" class="question-edit">
+			<textarea name="aadd" [(ngModel)]="newAnswer" class="answer-edit" ></textarea>
+			<div style="margin-top: 10px;">
+				<button [disabled]="loading" class="btn btn-primary" (click)="saveNew($event)" [disabled]="!newQuestion || !newAnswer">Save</button>
+				<img *ngIf="loading" class="pl-3" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+				&nbsp;&nbsp;
+				<a (click)="cancelNew($event)" class="btn-btn-link">Cancel</a>
+				<label class="caq-label" for="caq-new">
+				  <input type="checkbox" name="caq-new" [(ngModel)]="caq" />&nbsp;Include in Commonly Asked Question
+				</label>
+			</div>
+		</li>
+	</ng-container>
+</ul>
+
+<div class="caq">
+  <div class="title">Commonly Asked Questions</div>
+	<ol>
+	  <li *ngIf="caqItems.length == 0" style="width: 100%">
+		  <h4>There are currently no Commonly Asked Questions.  Please check back later.</h4>
+		</li>
+	  <li *ngFor="let item of caqItems" (click)="toggleCaq(item)"  [draggable]="myInfo.permissionLevel >= 6000" (dragover)="onDragOver($event, true, item)" (dragstart)="onDragStart($event, true, item)" (dragend)="onDragEnd(true, item)">
+		  <h4>{{item.question}}
+			  <a *ngIf="myInfo.permissionLevel >= 6000" title="Remove from Commanly Asked Questions" (click)="removeCaq($event, item)">
+			    <span class="silk silk-inline silk-delete"></span>
+				</a>
+			</h4>
+			<div [ngClass]="{expanded: item.caq_expanded}" [innerHTML]="item.answer"></div>
+			<i class="fa" [ngClass]="{'fa-caret-down': !item.caq_expanded, 'fa-caret-up': item.caq_expanded}"></i>
+		</li>
+	</ol>
+</div>
+
+<div class="still">
+  <h4>Still need Help?</h4>
+	<a [routerLink]="['contact-us']">CONTACT US</a>
+</div>

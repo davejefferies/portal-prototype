@@ -1,0 +1,50 @@
+:host {
+  .widget {
+	  border: 1px solid #7a7a79;
+    border-radius: 5px;
+		display: inline-block;
+		padding: 10px;
+		
+		h3 {
+		  border-bottom: 1px solid #7a7a79;
+		}
+	}
+	
+	.user {
+	  margin-left: 40px;
+	  height: 150px;
+	  min-width: 400px;
+		
+		div {
+		  padding-bottom: 10px;
+		}
+		
+		.company {
+		  font-size: 18px;
+		}
+	}
+	
+	.messages {
+	  height: 150px;
+		vertical-align: top;
+		margin-left: 40px;
+		width: 600px;
+		
+		.message {
+		  margin-bottom: 10px;
+		}
+		
+		.unread {
+		  font-weight: bold;
+		}
+	}
+	
+	.view-all {
+	  float: right;
+		font-size: 14px;
+		padding-top: 7px;
+		padding-right: 7px;
+		color: #014a7a;
+		text-decoration: none;
+	}
+}

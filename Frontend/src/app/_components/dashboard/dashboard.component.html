@@ -1,0 +1,43 @@
+<div class="user widget">
+  <div *ngIf="myInfo">
+		<h3>
+			<span class="silk silk-inline silk-user"></span>
+			{{myInfo.firstName}} {{myInfo.lastName}}
+		</h3>
+		<ng-container *ngIf="myInfo.reseller">
+			<div class="company">{{myInfo.reseller.name}}</div>
+			<div *ngIf="myInfo.reseller.account">Account Number: {{myInfo.reseller.account}}</div>
+		</ng-container>
+		<div>{{myInfo.email}}</div>
+	</div>
+</div>
+
+<div style="padding-top: 40px;">
+	<div class="messages widget">
+		<h3>
+			<span class="silk silk-inline silk-email"></span>
+			Messages ({{messageCount}})
+			<a class="view-all" [routerLink]="['/messages']">View all</a>
+		</h3>
+		<div *ngIf="messages.length == 0" style="text-align: center; margin-top: 10px;">
+		  There are no messages.
+		</div>
+		<div *ngFor="let msg of messages" class="message" [ngClass]="{unread: msg.status == 1}">
+			{{msg.subject}}
+		</div>
+	</div>
+
+	<div class="messages widget">
+		<h3>
+			<span class="silk silk-inline silk-email"></span>
+			Alerts ({{alertCount}})
+			<a class="view-all" [routerLink]="['/alerts']">View all</a>
+		</h3>
+		<div *ngIf="alerts.length == 0" style="text-align: center; margin-top: 10px;">
+		  There are no alerts.
+		</div>
+		<div *ngFor="let msg of alerts" class="message" [ngClass]="{unread: msg.status == 1}">
+			{{msg.subject}}
+		</div>
+	</div>
+</div>
