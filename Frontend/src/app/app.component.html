@@ -1,0 +1,12 @@
+<app-topbar></app-topbar>
+<!-- main app container -->
+<div id="layout-container">
+  <app-sidebar></app-sidebar>
+	<div id="content-area" class="jumbotron" style="margin: 0;" [ngClass]="{authorised: currentAuth}">
+    <app-breadcrumb></app-breadcrumb>
+		<app-title  *ngIf="currentAuth"></app-title>
+		<!--<h2 style="position: absolute; top: 40px;" *ngIf="currentAuth">Title will go here.</h2>-->
+		<alert></alert>
+		<router-outlet></router-outlet>
+	</div>
+</div>

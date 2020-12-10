@@ -1,0 +1,28 @@
+:host {
+  #layout-container {
+		min-height: calc(100vh - 112px);
+		display: flex;
+		flex-direction: row;
+		background-color: #fff;
+	}
+	
+	#content-area {
+		margin-right: 0;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    position: relative; 
+		padding-top: 100px;
+		overflow: auto !important;
+	}
+  
+  #content-area.authorised {
+    height: calc(100vh - 112px);
+		overflow: scroll;
+  }
+  
+  #content-area:not(.authorised) {
+    min-height: 100vh;
+  }
+}
