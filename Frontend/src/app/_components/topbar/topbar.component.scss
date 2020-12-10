@@ -1,0 +1,110 @@
+:host {
+  a {
+	  text-decoration: none;
+		color: white;
+	}
+	
+  .navbar {
+	  height: 112px;
+    background: #6c7ae0;
+		
+		.logo {
+			height: 90%;
+			margin: auto;
+		}
+	}
+	
+	.person {
+	  width: 45px;
+		height: 45px;
+		filter: invert(100%) sepia(0%) saturate(6%) hue-rotate(158deg) brightness(103%) contrast(104%);
+	}
+  
+  .name {
+    color: white;
+    padding-left: 5px;
+  }
+  
+  .hoverable {
+    padding: 5px;
+    border-radius: 5px;
+  }
+  
+  .hoverable.hovered {
+		background: white;
+		
+		.name {
+		  color: black !important;
+		}
+		
+		.person {
+		  filter: none !important;
+		}
+  }
+	
+	.click {
+	  cursor: pointer;
+	}
+	
+	.navbar-top {
+	  position: absolute; 
+		right: 2.2rem; 
+		top: 7px;
+		color: white;
+		font-size: 14px;
+	}
+	
+	.navbar-nav {
+	  position: absolute; 
+		right: 2rem; 
+		top: 40px;
+	}
+	
+	.user-menu {
+		position: absolute;
+		right: 0;
+		list-style-type: none;
+		overflow: hidden;
+		margin: 0;
+		padding: 0;
+		border-radius: .25rem;
+		text-align: center;
+		z-index: 1000;
+		top: 50px;
+		width: 200px;
+		border-radius: .25rem;
+		box-shadow: 0 0.5rem 1rem 0 rgba(44,51,73,.1);
+		border: 0 solid transparent;
+		display: none;
+		color: black;
+    background: white;
+		
+		li:first-child {
+			border-top: none;
+		}
+
+		li {
+			border-bottom: 1px solid #626263;
+			font-size: .9375rem;
+			font-weight: 400;
+			line-height: 49px;
+		}
+
+		li:last-child {
+			border-bottom-width: 0 !important;
+		}
+
+		li a {
+			border-radius: 0;
+			font-size: .8125rem;
+			font-weight: 600;
+			line-height: 1.5rem;
+			padding: .75rem 1rem !important;
+			color: black !important;
+		}
+	}
+	
+	.user-menu.expanded {
+	  display: block;
+	}
+}

@@ -1,0 +1,115 @@
+<div class="option-toolbar" style="height: 50px;">
+  Search:&nbsp;
+  <input type="text" class="search-field" name="search-field" [(ngModel)]="searchBy" (ngModelChange)="searchChange()" />
+  <div style="float: right">
+    Display&nbsp;
+    <select name="display-opt" [ngModel]="itemsPerPage" (ngModelChange)="perPageChange($event)">
+      <option value="10">10</option>
+      <option value="20">20</option>
+      <option value="50">50</option>
+      <option value="100">100</option>
+    </select>
+    &nbsp;results per page.
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th *ngIf="isDeleteEnabled() || isDeactivateEnabled()" class="delete-col">
+        <input type="checkbox" name="deleteAll" [(ngModel)]="deleteCheck" (ngModelChange)="deleteAllChange($event)" />
+      </th>
+			<!-- && (column.edit || column.view || column.otherButtons)-->
+			<ng-container *ngFor="let column of columns">
+				<th *ngIf="(column.name != 'Options' && !column.hidden) || column.name == 'Options' && (column.edit || column.view || column.otherButtons)" [ngStyle]="{width: (column.width ? column.width : 'auto')}">
+					<span [ngClass]="{'sortable': column.sortable}" (click)="sortData(column)">
+						{{column.name}}&nbsp;
+						<svg *ngIf="column.sortable" aria-hidden="true" focusable="false" data-prefix="fad" data-icon="sort-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+							<g class="fa-group">
+								<path [attr.fill]="!sortAsc && sortBy == column.link ? 'black' : '#ababab'" d="M41.05 288.05h238c21.4 0 32.1 25.9 17 41l-119 119a23.9 23.9 0 0 1-33.8.1l-.1-.1-119.1-119c-15.05-15.05-4.4-41 17-41z"></path>
+								<path [attr.fill]="sortAsc && sortBy == column.link ? 'black' : '#ababab'" d="M24.05 183.05l119.1-119A23.9 23.9 0 0 1 177 64a.94.94 0 0 1 .1.1l119 119c15.1 15.1 4.4 41-17 41h-238c-21.45-.05-32.1-25.95-17.05-41.05z"></path>
+							</g>
+						</svg>
+					</span>
+				</th>
+			</ng-container>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngIf="filteredData.length == 0">
+      <td [attr.colspan]="isDeleteEnabled() || isDeactivateEnabled() ? columns.length + 1 : columns.length" style="text-align: center;">There is nothing to display.</td>
+    </tr>
+    <ng-container *ngFor="let item of filteredData; let i = index">
+      <tr (click)="rowExpand(item)" [ngClass]="{even: i % 2, odd: !(i % 2)}">
+        <td *ngIf="isDeleteEnabled() || isDeactivateEnabled()"  class="delete-col">
+          <input type="checkbox" name="delete{{i}}" [(ngModel)]="item.delete" (ngModelChange)="deleteSingleChange($event)" (click)="stopProp($event)" />
+        </td>
+      <ng-container *ngFor="let column of columns">
+        <td *ngIf="column.link && !column.hidden" [ngStyle]="{width: (column.width ? column.width : 'auto'), 'max-width': (column.width ? column.width : 'auto'), 'font-weight': (messages && item.status == 1 ? 'bold' : 'normal'), cursor: (messages ? 'pointer' : 'default')}">{{getColumnData(item[column.link], column)}}</td>
+        <td class="options" *ngIf="!column.link && column.name == 'Options' && (column.edit || column.view || column.otherButtons)" [ngStyle]="{width: (column.width ? column.width : 'auto')}">
+          <a title="Edit" *ngIf="column.edit" [routerLink]="['edit/' + item.id]" [queryParams]="combineParams(item)"> 
+            <div class="silk inline silk-pencil"></div>
+          </a>
+          <a title="View" *ngIf="column.view" [routerLink]="['view/' + item.id]" [queryParams]="combineParams(item)"> 
+            <div class="silk inline silk-eye"></div>
+          </a>
+          <ng-container *ngIf="column.otherButtons">
+            <ng-container *ngFor="let btn of column.otherButtons">
+              <a *ngIf="btn.route" [title]="btn.title" [routerLink]="btn.route" [queryParams]="getParams(btn.params, item)"> 
+                <div class="silk inline {{btn.icon}}"></div>
+                <div *ngIf="btn.count_field" class="count_field">{{item[btn.count_field] ? item[btn.count_field] : 0}}</div>
+              </a>
+							<a *ngIf="!btn.route" [title]="btn.title" (click)="runCallback(btn.callback, item)"> 
+                <div class="silk inline {{btn.icon}}"></div>
+                <div *ngIf="btn.count_field" class="count_field">{{item[btn.count_field] ? item[btn.count_field] : 0}}</div>
+              </a>
+            </ng-container>
+          </ng-container>
+          <a title="Emulate" *ngIf="column.emulate"> 
+            <div class="silk inline silk-world-add"></div>
+          </a>
+        </td>
+      </ng-container>
+      </tr>
+			<tr *ngIf="messages && item.expanded" [ngClass]="{even: i % 2, odd: !(i % 2)}">
+			  <td [attr.colspan]="columns.length" [innerHTML]="item.body" class="body"></td>
+			</tr>
+    </ng-container>
+  </tbody>
+</table>
+
+<div class="option-toolbar">
+  <div class="buttons">
+    <a class="button" *ngIf="isEnabled('add')" [routerLink]="['new']" [queryParams]="params">
+      <div class="button-text"> 
+        <div class="silk inline silk-add"></div>
+        Add
+      </div>
+    </a>
+		<a class="button" *ngIf="isEnabled('markRead')" [ngClass]="{disabled: deleteDisabled()}" (click)="markReadClick()">
+      <div class="button-text"> 
+        <div class="silk inline silk-bin"></div>
+        Mark As Read ({{deleteCount()}})
+      </div>
+    </a>
+		<a class="button" *ngIf="isEnabled('deactivate')" [ngClass]="{disabled: deleteDisabled()}" (click)="deactivateClick()">
+      <div class="button-text"> 
+        <div class="silk inline silk-bin"></div>
+        Deactivate ({{deleteCount()}})
+      </div>
+    </a>
+    <a class="button" *ngIf="isEnabled('delete')" [ngClass]="{disabled: deleteDisabled()}" (click)="deleteClick()">
+      <div class="button-text"> 
+        <div class="silk inline silk-bin"></div>
+        Delete ({{deleteCount()}})
+      </div>
+    </a>
+  </div>
+  <div style="text-align: center">
+    <ul class="paginator" *ngIf="chunks.length > 1">
+      <li [ngClass]="{disabled: currentPage == 1}" (click)="goPrevious()">«</li>
+        <li *ngFor="let page of pager" [ngClass]="{ellipsis: !page.number, active: page.number == currentPage}" (click)="goToPage(page.number)">{{page.number ? page.number : '...'}}</li>
+      <li [ngClass]="{disabled: currentPage == chunks.length}" (click)="goNext()">»</li>
+    </ul>
+  </div>
+</div>

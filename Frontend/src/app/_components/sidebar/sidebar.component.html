@@ -1,0 +1,53 @@
+<nav class="navbar navbar-dark navbar-expand" *ngIf="currentAuth">
+  <ul>
+    <li>
+			<a [routerLink]="['/']" [ngClass]="{active: isCurrentRoute('')}">
+			  <span class="silk silk-inline silk-house"></span>
+				Home
+			</a>
+		</li>
+		<li>
+			<a (click)="messageToggle()" [ngClass]="{active: isCurrentRoute('messages') || isCurrentRoute('alerts')}">
+			  <span class="silk silk-inline silk-email"></span>
+				Messages ({{messageCount}}) / Alerts ({{alertCount}})
+				<span class="arrow" [ngClass]="{down: !messageExpand, up: messageExpand}"></span>
+			</a>
+		</li>
+		<ng-container *ngIf="messageExpand">
+		  <li class="submenu">
+				<a [routerLink]="['/messages']" [ngClass]="{active: isCurrentRoute('messages')}">
+					Messages ({{messageCount}})
+				</a>
+			</li>
+			<li class="submenu">
+				<a [routerLink]="['/alerts']" [ngClass]="{active: isCurrentRoute('alerts')}">
+					Alerts ({{alertCount}})
+				</a>
+			</li>
+		</ng-container>
+		<li *ngIf="myInfo && myInfo.permissionLevel >= 6000">
+			<a [routerLink]="['/resellers']" [ngClass]="{active: isCurrentRoute('resellers')}">
+			  <span class="silk silk-inline silk-brick"></span>
+				My Resellers ({{resellerCount}})
+			</a>
+		</li>
+		<li>
+			<a [routerLink]="['/clients']" [ngClass]="{active: isCurrentRoute('clients')}">
+			  <span class="silk silk-inline silk-group"></span>
+				My Clients ({{clientCount}})
+			</a>
+		</li>
+		<li>
+			<a [routerLink]="['/orders']" [ngClass]="{active: isCurrentRoute('orders')}">
+			  <span class="silk silk-inline silk-basket-go"></span>
+				My Orders
+			</a>
+		</li>
+		<li>
+			<a [routerLink]="['/users']" [ngClass]="{active: isCurrentRoute('users')}">
+			  <span class="silk silk-inline silk-user"></span>
+				User Management
+			</a>
+		</li>
+  </ul>
+</nav>

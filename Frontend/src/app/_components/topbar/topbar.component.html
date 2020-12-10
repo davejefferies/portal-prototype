@@ -1,0 +1,19 @@
+<nav class="navbar navbar-expand navbar-dark" *ngIf="currentAuth">
+  <img class="logo" src="assets/alchemy_logo.svg">
+  <div class="navbar-top">
+	  <a>WHMCS</a>
+		&nbsp;&nbsp;-&nbsp;&nbsp;
+    <a [routerLink]="['/help']">Help & Support</a>
+	</div>
+	<div class="navbar-nav" *ngIf="currentAuth">
+	  <div id="profile-toggle" class="click hoverable" [ngClass]="{hovered: isUserExpanded}" (mouseover)="userToggle()">
+	    <img src="assets/person.svg" class="person" />
+      <span class="name">{{myInfo ? myInfo.firstName : ''}}</span>
+		</div>
+		<ul id="user-menu" class="user-menu" [ngClass]="{'expanded': isUserExpanded}">
+			<li>
+			  <a (click)="menuLogout()">Sign Out</a>
+			</li>
+		</ul>
+	</div>
+</nav>
