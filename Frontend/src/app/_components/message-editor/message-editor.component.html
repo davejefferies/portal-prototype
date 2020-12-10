@@ -1,0 +1,48 @@
+<div class="col-sm-6 offset-sm-3">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+	  <div class="form-group">
+		  <label for="reseller">Reseller</label>
+			<select formControlName="reseller" class="form-control" id="reseller_name" [attr.disabled]="id">
+			  <option value="0">All</option>
+			  <option *ngFor="let reseller of resellers" [value]="reseller.id">{{reseller.name}}</option>
+			</select>
+		</div>
+		<div class="form-group">
+		  <label for="type">Type</label>
+			<select formControlName="type" class="form-control" id="type">
+			  <option *ngFor="let key of objectKeys(types)" [value]="key">{{types[key]}}</option>
+			</select>
+		</div>
+		<div class="form-group" *ngIf="type == 1" >
+		  <label for="severity">Severity</label>
+			<select formControlName="severity" class="form-control" id="severity">
+			  <ng-container *ngFor="let key of objectKeys(severities)">
+			    <option *ngIf="key > 0" [value]="key">{{severities[key]}}</option>
+				</ng-container>
+			</select>
+		</div>
+		<div class="form-group">
+		  <label for="subject">Subject</label>
+			<input type="text" formControlName="subject" class="form-control" [ngClass]="{'is-invalid': submitted && f.subject.errors}" />
+			<div *ngIf="f.subject.errors" class="invalid-feedback" style="display:block;">
+			  <div *ngIf="f.subject.errors.required">Subject is required</div>
+			</div>
+		</div>
+		<div class="form-group">
+		  <label for="body">Body</label>
+			<textarea formControlName="body" class="form-control" [ngClass]="{'is-invalid': submitted && f.body.errors}"></textarea>
+			<div *ngIf="f.body.errors" class="invalid-feedback" style="display:block;">
+			  <div *ngIf="f.body.errors.required">Body is required</div>
+			</div>
+		</div>
+		<div class="form-group">
+		  <div class="created">Created: {{form.value.created}}</div>
+		</div>
+	  <div class="form-group" style="margin-top: 10px;">
+		  <button [disabled]="loading" class="btn btn-primary">{{form.value.id ? 'Update' : 'Create'}}</button>
+		  <img *ngIf="loading" class="pl-3" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+			&nbsp;&nbsp;
+			<a (click)="goBack()" class="btn-btn-link">Cancel</a>
+		</div>
+	</form>
+</div>
