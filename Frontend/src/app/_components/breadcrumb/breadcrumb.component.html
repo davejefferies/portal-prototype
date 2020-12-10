@@ -1,0 +1,11 @@
+<div class="crumbs" *ngIf="crumbs.length > 1">
+  <ng-container *ngFor="let crumb of crumbs; let i = index;">
+    <div class="crumb" [routerLink]="crumbs.length != i + 1 ? crumb.url : null" [queryParams]="crumb.params">
+      <div *ngIf="crumb.icon" class="silk inline {{crumb.icon}}" style="vertical-align: middle"></div>
+      <a href style="vertical-align: middle" *ngIf="!crumb.iconOnly" onclick="event.preventDefault();">
+        {{ crumb.label }}
+      </a>
+    </div>
+    <div class="seperator" *ngIf="crumbs.length != i + 1">&nbsp;/&nbsp;</div>
+  </ng-container>
+</div>
