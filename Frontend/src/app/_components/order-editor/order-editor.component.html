@@ -1,0 +1,84 @@
+<div class="col-sm-9">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+	  <div class="form-group">
+		  <label for="client">Client</label>
+			<select formControlName="client" class="form-control" id="client_name">
+			  <option *ngFor="let client of clients" [value]="client.id">{{client.name}}</option>
+			</select>
+		</div>
+		<div class="form-group" formArrayName="items">
+		  <div>
+		    <label for="items"></label>
+				<button class="btn btn-info add-new" (click)="addItem()">
+				  <div class="plus"></div>
+					<div class="text">Add New</div>
+				</button>
+			</div>
+			<table class="table table-bordered">
+			  <thead>
+				  <tr>
+					  <th style="width: 150px;"></th>
+					  <th style="width: 170px;">Type</th>
+						<th style="width: 115px;">Number</th>
+						<th style="width: 300px;">Label</th>
+						<th>Status</th>
+						<th style="width: 90px;">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+				  <tr *ngIf="itemCount() == 0">
+					  <td colspan="6" style="text-align: center;">There are no items in this Order.</td>
+					</tr>
+					<ng-container *ngFor="let control of form.get('items')['controls']; let i = index">
+						<tr [formGroupName]="i" *ngIf="control.value.status != 8">
+							<td style="width: 150px;">
+								<select formControlName="kind" class="form-control" id="item_kind{{i}}">
+									<option value="new">New</option>
+									<option value="modify">Modify</option>
+									<option value="remove">Remove</option>
+								</select>
+							</td>
+							<td style="width: 170px;">
+								<select formControlName="type" class="form-control" id="item_type{{i}}">
+									<option *ngFor="let type of types" [value]="type.id">{{type.value}}</option>
+								</select>
+							</td>
+							<td style="width: 115px;">
+								<input type="number" formControlName="number" class="form-control" [ngClass]="{'is-invalid': submitted && control.controls.number.errors}" />
+							</td>
+							<td style="width: 300px;">
+								<input type="text" formControlName="label" class="form-control" [ngClass]="{'is-invalid': submitted && control.controls.label.errors}" />
+							</td>
+							<td>
+								<select formControlName="status" class="form-control" id="item_status{{i}}">
+									<option *ngFor="let status of statuses" [value]="status.id">{{status.value}}</option>
+								</select>
+							</td>
+							<td style="width: 90px;">
+								<a class="delete" (click)="removeItem(i)">
+									<i class="fa fa-trash" style="20px;"></i>
+								</a>
+							</td>
+						</tr>
+					</ng-container>
+				</tbody>
+			</table>
+		</div>
+		<div class="form-group">
+		  <label for="notes">Notes</label>
+			<textarea formControlName="notes" class="form-control"></textarea>
+		</div>
+		<div class="form-group" *ngIf="myInfo && myInfo.permissionLevel >= 6000">
+		  <label for="status">Status</label>
+			<select formControlName="status" class="form-control" id="status">
+			  <option *ngFor="let status of statuses" [value]="status.id">{{status.value}}</option>
+			</select>
+		</div>
+		<div class="form-group" style="margin-top: 10px;">
+		  <button [disabled]="loading" class="btn btn-primary">{{form.value.id ? 'Update' : 'Create'}}</button>
+		  <img *ngIf="loading" class="pl-3" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+			&nbsp;&nbsp;
+			<a (click)="goBack()" class="btn-btn-link">Cancel</a>
+		</div>
+	</form>
+</div>

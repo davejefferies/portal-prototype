@@ -1,0 +1,41 @@
+:host {
+  .add-new {
+	  float: right;
+    height: 30px;
+    font-weight: bold;
+    font-size: 12px;
+    text-shadow: none;
+    min-width: 100px;
+    border-radius: 50px;
+    line-height: 13px;
+		vertical-align: top;
+		
+		.plus {
+		  display:inline-block;
+			width:20px;
+			height:20px;
+		  background:
+				linear-gradient(#fff,#fff),
+				linear-gradient(#fff,#fff);
+			background-position:center;
+			background-size: 50% 2px,2px 50%; /*thickness = 2px, length = 50% (25px)*/
+			background-repeat:no-repeat;
+			color: white;
+		}
+		
+		.text {
+		  display: inline-block;
+			vertical-align: top;
+			margin-top: 3px;
+		}
+	}
+	
+	.delete {
+	  color: #E34724;
+		
+		i {
+		  font-size: 20px;
+			margin-top: 10px;
+		}
+	}
+}
